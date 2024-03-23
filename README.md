@@ -7,10 +7,10 @@ This is the code for Efficient Human Motion Reconstruction from Monocular Videos
  * [Video](https://www.youtube.com/watch?v=XWgKF8hXung)
 
 
-The parameters used in this repository have been updated to fit for a different keypoint layout from our Siggraph Asia 2023 submission.
+We have refined the parameters in this repository to accommodate an alternative keypoint layout building upon our submission to Siggraph Asia 2023
 
 ## Installation
-- Create a ROS workspace
+- Create a ROS (Robot Operating System) workspace
 - Put all the subfolders in this repository in the src of your workspace
 - Build workspace
 
