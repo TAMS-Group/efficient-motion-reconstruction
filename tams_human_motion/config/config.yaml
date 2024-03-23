@@ -1,0 +1,442 @@
+# Configuration file for human motion reconstruction
+# 2022, Philipp Ruppel
+
+
+# network
+network:
+
+  mediapipe: True
+
+  SMLP: False
+
+
+
+# Camera parameters
+camera:
+
+  # Camera orientation [radians]
+  orientation:
+    yaw: 0
+    pitch: 0
+    roll: 0
+
+  # Camera position offset
+  position:
+    x: 0
+    y: 0
+    z: 0
+
+  # Set height_uncertainty to 0 if the camera position is perfectly known.
+  # Set height_uncertainty to a value > 0 to also solve for the camera position.
+  # Currently, solving for the camera pose might slow down some of the solvers.
+  #height_uncertainty: 0.1
+  height_uncertainty: 0
+
+  # Set orientation_uncertainty to 0 if the camera orientation is perfectly
+  # known.
+  # Set orientation_uncertainty to a small value greater than zero to also try
+  # solving for camera orientation.
+  # Currently, solving for the camera pose might slow down some of the solvers.
+  #orientation_uncertainty: 0.1
+  orientation_uncertainty: 0
+
+
+
+# Robot dynamics
+dynamics:
+
+  # Scaling factor to accelerate convergence
+  scaling: 100
+
+  # The higher these values, the more the robot tries to avoid high forces and
+  # torques
+  contact_force_cost: 0.001
+  joint_force_cost: 0.001
+  joint_torque_cost: 0.001
+
+  # Penalty if it tries to generate forces that make the feet stick to the
+  # ground. Not needed anymore if friction cones are enabled.
+  contact_stickiness_penalty: 0
+
+  # Contact forces can only occur if the bodies actually touch. This parameter
+  # controls how much penatly to apply to physically incorrect forces acting
+  # over a distance
+  contact_force_distance_penalty: 0.2
+
+  # Penalty to avoid slipping
+  contact_force_slip_penalty: 0.2
+
+  # This applies the slip penalty over multiple time frames to encourage smooth
+  # solutions
+  contact_slip_frames: 1
+
+  # Scaling factors for physical consistency losses using a simplified
+  # formulation that only solves for contact forces.
+  # It probably makes sense to always enable these to accelerate convergence
+  # and to improve stability, even if
+  # translational*/rotational*/*_velocity_consistency are enabled.
+  # Note that these factors will by multiplied with the scaling factors in the
+  # solver configuration.
+
+  force_consistency:  0.0015
+  torque_consistency: 0.0015
+
+  # Scaling factors for physical consistency losses using a formulation that
+  # also solves for joint forces and joint torques.
+  # This is not always needed and can be disabled for shorter computation times
+  # if force_consistency and torque_consistency are enabled and if
+  # joint_force_cost and joint_torque_cost are zero.
+  # Only either translational_*/rotational_* or *_velocity_* are needed.
+  # Note that these factors will by multiplied with the scaling factors in the
+  # solver configuration.
+
+  translational_consistency_loss: 0
+  rotational_consistency_loss: 0
+
+  linear_velocity_consistency: 0.0005
+  angular_velocity_consistency: 0.0002
+
+  # linear_velocity_consistency:  0
+  # angular_velocity_consistency: 0
+
+  # How many substeps to simulate when integrating rigid body translations and
+  # orientations
+  # 1 = no substeps (should be fine)
+  # More substeps might be more stable but also slower
+  substeps: 1
+
+  # For every stride'th time step, we simulate the dynamics over steps number of
+  # frames into the future according to the current force and torque estimates
+  # and for each step, we apply the translational and rotational consistency
+  # penalties
+  steps: 1
+
+  # Set this to a value greater 1 to only unroll dynamics starting from every
+  # stride'th time step to improve performance
+  stride: 1
+
+  # How much to prefer smooth force and torque profiles
+  smoothness: 0
+
+  # Acceleration due to gravity, in m/s^2
+  # Earth: -9.81
+  gravity: -9.81
+  gravity_uncertainty: 0
+
+  # Penalty to enforce friction cones
+  friction_cone_penalty: 1
+
+  # The weight of the last time step can be scaled by this factor (boundary
+  # condition)
+  end_weight: 1
+
+
+
+# Parameters for TAMSVIZ visualization
+visualization:
+
+  # Scaling factor for the lines that visualize joint and contact forces
+  force_scaling: 0.001
+
+  # Scaling factor for the lines that visualize joint torques
+  torque_scaling: 0.001
+
+  # Line width for visualizing forces and torques
+  line_width: 0.005
+
+  # Size of keypoints from TXT data files
+  keypoint_size: 0.01
+
+  # Width of trajectory lines when visualizing data from TXT files
+  trail_width: 0.005
+
+  # size of keypoints from reconstruction
+  reconstruct_line_width: 0.01
+
+  # width of trajectory lines from reconstruction
+  reconstruct_point_size: 0.02
+
+
+
+# Regularization terms to prefer nice and smooth motions
+regularization:
+  weights:
+    revolute_joint_acceleration: 5
+    floating_joint_acceleration: 0
+    revolute_joint_velocity: 0
+    floating_joint_velocity: 0
+    cartesian_link_acceleration: 0
+    cartesian_link_velocity: 0
+
+
+
+# How to preprocess the keypoint data from the .txt files
+preprocessing:
+
+  # Set to a value greater zero to reduce the number of time frames for faster
+  # processing
+  decimation: 2
+
+  # If there are more time frames than this number, some frames will be skipped
+  max_frames: 100
+
+  # These links are used as a size reference to scale the dataset to the size
+  # of the human model
+  size_reference_links: [
+      [24, 26], [26, 28], # right leg
+      [23, 25], [25, 27], # left leg
+      [11, 13], [13, 15], # left arm
+      [12, 14], [14, 16], # right arm
+  ]
+
+  ground_offset: 0.10
+
+  center_data: True
+
+  scale: True
+
+
+
+# Collision avoidance
+# Currently only prevents the robot model from penetrating the ground
+collision:
+
+  # Avoid penetrating ground plane
+  ground:
+
+    # Scaling factor for the collision penalty
+    # Set to zero to ignore collisions
+    penalty: 2
+
+  # Self collision between robot links
+  self:
+    padding: 0.1
+    penalty: 1
+    continuous: True
+    pairs:
+      - [LeftFoot, RightFoot]
+      - [LeftLowerLeg_f1, RightFoot]
+      - [LeftFoot, RightLowerLeg_f1]
+      - [LeftLowerLeg_f1, RightLowerLeg_f1]
+      - [LeftUpperLeg, RightLowerLeg_f1]
+      - [LeftLowerLeg_f1, RightUpperLeg]
+      - [LeftUpperLeg, RightUpperLeg]
+      - [LeftFoot, RightUpperLeg]
+      - [LeftUpperLeg, RightFoot]
+      - [LeftForeArm, LeftUpperLeg]
+      - [RightForeArm, RightUpperLeg]
+      - [LeftForeArm, Pelvis]
+      - [RightForeArm, Pelvis]
+      - [LeftForeArm, RightForeArm]
+      - [LeftUpperLeg, RightUpperLeg]
+
+
+
+# Options for kinematic robot model
+joints:
+
+  # Penalty if joint position limits are violated
+  position_limit_penalty: 10
+
+  # Safety margin to stay away from joint limits
+  position_limit_margin: 0.2
+
+  # Maximum joint velocity in rad/s
+  #velocity_limit: 100
+  velocity_limit: 0
+
+  # Penalty if joint is turning too fast
+  #velocity_penalty: 10
+  velocity_penalty: 0
+
+  # Maximum joint acceleration
+  #acceleration_limit: 30
+  acceleration_limit: 0
+
+  # Penalty if joint is accelerating too fast
+  #acceleration_penalty: 10
+  acceleration_penalty: 0
+
+  # Allows forcing two joints to have the same joint angle
+  mimic: [ ]
+    # - [ jL5S1_rotx, jL4L3_rotx, jL1T12_rotx, jT9T8_rotx ]
+    # - [ jL5S1_roty, jL4L3_roty, jL1T12_roty, jT9T8_roty ]
+    # - [ jL5S1_rotx, jL4L3_rotx, jL1T12_rotx, jT9T8_rotx, jT1C7_rotx ]
+    # - [ jL5S1_roty, jL4L3_roty, jL1T12_roty, jT9T8_roty, jT1C7_roty ]
+    #- [ jT9T8_rotz, jT1C7_rotz ]
+    #- [ jLeftC7Shoulder_rotx, jLeftShoulder_rotx ]
+    #- [ jRightC7Shoulder_rotx, jRightShoulder_rotx ]
+
+  # Allows pulling / regularizing joints towards the zero position
+  zero: [ ]
+    # - [ jL5S1_rotx, 0.3 ]
+    # - [ jL5S1_roty, 0.3 ]
+    #
+    # - [ jL4L3_rotx, 0.3 ]
+    # - [ jL4L3_roty, 0.3 ]
+    #
+    # - [ jL1T12_rotx, 0.3 ]
+    # - [ jL1T12_roty, 0.3 ]
+    #
+    # - [ jT9T8_rotx, 0.3 ]
+    # - [ jT9T8_roty, 0.3 ]
+    # - [ jT9T8_rotz, 0.3 ]
+    #
+    # - [ jT1C7_rotx, 0.3 ]
+    # - [ jT1C7_roty, 0.3 ]
+    # - [ jT1C7_rotz, 0.3 ]
+    #
+    # - [ jLeftWrist_rotx, 0.1 ]
+    # - [ jLeftWrist_rotz, 0.1 ]
+    # - [ jRightWrist_rotx, 0.1 ]
+    # - [ jRightWrist_rotz, 0.1 ]
+
+    #- [ jLeftC7Shoulder_rotx, 0.1 ]
+    #- [ jRightC7Shoulder_rotx, 0.1 ]
+
+
+
+# Solver parameters
+# see reconstruct script for more options
+solver:
+
+  # Solver schedule
+  # [ iterations, diagonal regularization, dynamic regularization, physical consistency, collision avoidance ]
+  # It probably makes sense to start with only kinematics + diagonal regularization,
+  # then add dynamic regularization, and then crank up physical consistency
+  schedule:
+
+    - [   5,  1,         0,   0,     0  ]
+    - [   5,  0.1,       0,   0,     0  ]
+    - [   5,  0.01,      0,   0,     0  ]
+    - [   5,  0.001,     0,   0,     0  ]
+    - [   5,  0.0001,    0,   0,     0  ]
+    - [   5,  0.00001,   0,   0,     0  ]
+
+    - [   5,  1,         1,   0,     1  ]
+    - [   5,  0.1,       1,   0,     1  ]
+    - [   5,  0.01,      1,   0,     1  ]
+    - [   5,  0.001,     1,   0,     1  ]
+    - [   5,  0.0001,    1,   0,     1  ]
+    - [   5,  0.00001,   1,   0,     1  ]
+
+    - [   5,  0.00001,   1,   0.01,  1  ]
+    - [   5,  0.00001,   1,   0.02,  1  ]
+    - [   5,  0.00001,   1,   0.03,  1  ]
+    - [   5,  0.00001,   1,   0.04,  1  ]
+    - [   5,  0.00001,   1,   0.05,  1  ]
+    - [   5,  0.00001,   1,   0.06,  1  ]
+    - [   5,  0.00001,   1,   0.07,  1  ]
+    - [   5,  0.00001,   1,   0.08,  1  ]
+    - [   5,  0.00001,   1,   0.09,  1  ]
+
+    - [   5,  0.00001,   1,   0.1,   1  ]
+    - [   5,  0.00001,   1,   0.2,   1  ]
+    - [   5,  0.00001,   1,   0.3,   1  ]
+    - [   5,  0.00001,   1,   0.4,   1  ]
+    - [   5,  0.00001,   1,   0.5,   1  ]
+    - [   5,  0.00001,   1,   0.6,   1  ]
+    - [   5,  0.00001,   1,   0.7,   1  ]
+    - [   5,  0.00001,   1,   0.8,   1  ]
+    - [   5,  0.00001,   1,   0.9,   1  ]
+
+    - [ 100,  0.00001,   1,   1,     1  ]
+
+
+
+# Parameters for mapping between keypoint positions and the robot model
+retargeting:
+
+  # Number of motion tracking keypoints in .txt files
+  keypoint_count: 33
+
+  # Mapping between:
+  # - Point index in txt files
+  # - Keypoint name
+  # - Link name in URDF model
+  mapping:
+    - [11, left_shoulder, LeftUpperArm]
+    - [12, right_shoulder, RightUpperArm]
+    - [13, left_elbow, LeftForeArm]
+    - [14, right_elbow, RightForeArm]
+    - [15, left_wrist, LeftHand]
+    - [16, right_wrist, RightHand]
+    - [23, left_hip, LeftUpperLeg]
+    - [24, right_hip, RightUpperLeg]
+    - [25, left_knee, LeftLowerLeg_f1]
+    - [26, right_knee, RightLowerLeg_f1]
+    - [27, left_ankle, LeftFoot]
+    - [28, right_ankle, RightFoot]
+    - [31, left_foot_index, LeftToe]
+    - [32, right_foot_index, RightToe]
+
+  # These keypoints will be mapped directly using Cartesian distance losses.
+  # Format: [keypoint name, weight]
+  points:
+    - [left_hip, 0.1]
+    - [right_hip, 0.1]
+    - [left_shoulder, 0.1]
+    - [right_shoulder, 0.1]
+    - [left_elbow, 0.1]
+    - [right_elbow, 0.1]
+    - [left_wrist, 1]
+    - [right_wrist, 1]
+    - [left_knee, 0.1]
+    - [right_knee, 0.1]
+    - [left_ankle, 2]
+    - [right_ankle, 2]
+
+  # These links will be mapped by matching the direction vector from a first
+  # keypoint to a second keypoint.
+  # Format: [[first keypoint, second keypoint], weight]
+  links: [
+
+    # hip
+    [[23, 24], 1.0],
+
+    # shoulders
+    [[11, 12], 1.0],
+
+    # spine
+    [[11, 23], 1.0],
+    [[12, 24], 1.0],
+
+    # right leg
+    [[24, 26], 0.1],
+    [[26, 28], 0.1],
+
+    # left leg
+    [[23, 25], 0.1],
+    [[25, 27], 0.1],
+
+    # left arm
+    [[11, 13], 0.2],
+    [[13, 15], 0.3],
+
+    # right arm
+    [[12, 14], 0.2],
+    [[14, 16], 0.3],
+
+    # feet
+    [[27, 31], 0.1],
+    [[28, 32], 0.1],
+  ]
+
+  # Allow different weights along each axis since the estimated distance from
+  # the camera is probably less accurate than the two image dimensions
+  axis_weights:
+    x: 1
+    y: 0.2
+    z: 1
+
+  # Scaling factor for the link direction loss (see above / links)
+  link_weight: 1
+
+  # Scaling factor for the Cartesian point position loss (see above / points)
+  point_weight: 0.2
+
+  # Scaling factor for the Cartesian point velocity loss (see above / points)
+  velocity_weight: 0.02
+
+  # Increase the weight of the last sample by this factor (boundary condition)
+  end_weight: 10

@@ -1,0 +1,24 @@
+# Configuration file for human motion reconstruction
+# 2022, Philipp Ruppel
+
+# Information about the .txt file with tracking data
+recording:
+
+  # Number of frames per second in .txt file
+  fps: 30
+
+  # Scaling
+  scale:
+    x: 1
+    y: 1
+    z: 1
+
+# Regularization terms to prefer nice and smooth motions
+regularization:
+  weights:
+    revolute_joint_acceleration: 0.5
+    floating_joint_acceleration: 0
+    revolute_joint_velocity: 0
+    floating_joint_velocity: 0
+    cartesian_link_acceleration: 0
+    cartesian_link_velocity: 0

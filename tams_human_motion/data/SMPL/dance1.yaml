@@ -1,0 +1,83 @@
+# Configuration file for human motion reconstruction
+# 2022, Philipp Ruppel
+
+# Information about the .txt file with tracking data
+recording:
+
+  # Number of frames per second in .txt file
+  fps: 30
+
+  # Scaling
+  scale:
+    x: 1
+    y: 1
+    z: 1
+
+# How to preprocess the keypoint data from the .txt files
+preprocessing:
+
+  # Set to a value greater zero to reduce the number of time frames for faster
+  # processing
+  decimation: 1
+
+  # If there are more time frames than this number, some frames will be skipped
+  max_frames: 100000
+
+  # These links are used as a size reference to scale the dataset to the size
+  # of the human model
+  size_reference_links: [
+      [2, 5], [5, 8], # right leg
+      [1, 4], [4, 7], # left leg
+      [16, 18], [18, 20], # left arm
+      [17, 19], [19, 21], # right arm
+  ]
+
+  ground_offset: 0.13
+# center data or not
+  center_data: True
+# scale data or not
+  scale: True
+
+visualization:
+
+  # Scaling factor for the lines that visualize joint and contact forces
+  force_scaling: 0.001
+
+  # Scaling factor for the lines that visualize joint torques
+  torque_scaling: 0.001
+
+  # Line width for visualizing forces and torques
+  line_width: 0.000
+
+  # Size of keypoints from TXT data files
+  keypoint_size: 0.0
+
+  # Width of trajectory lines when visualizing data from TXT files
+  trail_width: 0.0
+
+  # size of keypoints from reconstruction
+  reconstruct_line_width: 0.01
+
+  # width of trajectory lines from reconstruction
+  reconstruct_point_size: 0.02
+
+
+regularization:
+  weights:
+    revolute_joint_acceleration: 0.5
+    floating_joint_acceleration: 0
+    revolute_joint_velocity: 0
+    floating_joint_velocity: 0
+    cartesian_link_acceleration: 0
+    cartesian_link_velocity: 0
+
+
+
+# save data or not
+saving_data:
+
+  save_txt: False
+
+  save_name: 'dance1_joints.txt'
+
+  save_path: '/home/lin/Documents/MetaMotion/videos/dance/dance1/'

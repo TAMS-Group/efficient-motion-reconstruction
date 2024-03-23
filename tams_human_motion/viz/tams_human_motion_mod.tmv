@@ -1,0 +1,389 @@
+Display:
+  Displays:
+    - MaterialOverride:
+        Color: false
+        Material:
+          Color:
+            B: 0.000000
+            G: 0.364754
+            R: 0.684426
+          Metallic: 0.000000
+          Normals: ""
+          Opacity: 0.983980
+          Roughness: 0.000000
+          Texture: ""
+          Unlit: false
+          id: 1361
+        Normals: false
+        Parameters: false
+        Texture: false
+        id: 1360
+      Name: MarkerArrayDisplay1
+      Topic: /tractor/visualization
+      Visible: true
+      id: 1359
+      type: MarkerArrayDisplay
+    - Brightness: 6.000000
+      Color:
+        B: 0.951368
+        G: 0.790274
+        R: 0.814589
+      Frame: ""
+      Name: DirectionalLight3
+      ShadowBias: 1.000000
+      ShadowDepth: 10.000000
+      ShadowEnable: true
+      ShadowWidth: 2.000000
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 180.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      ViewSpace: false
+      Visible: true
+      id: 78229
+      type: DirectionalLight
+    - Description: /robot_description
+      DoubleSided: false
+      Frame: ""
+      ImportOptions:
+        RecomputeNormals: false
+        SmoothNormals: true
+      MaterialOverride:
+        Color: true
+        Material:
+          Color:
+            B: 0.946667
+            G: 0.262221
+            R: 0.479999
+          Metallic: 0.413180
+          Normals: ""
+          Opacity: 1.000000
+          Roughness: 0.346998
+          Texture: ""
+          Unlit: false
+          id: 78447
+        Normals: false
+        Parameters: false
+        Texture: false
+        id: 78446
+      MaxSteps: 9999
+      Name: RobotTrajectoryDisplay5
+      PlayTrajectory: true
+      ShowAllStates: false
+      Speed: 1.000000
+      Topic: /move_group/display_planned_path
+      TrajectoryTime: 0.000000
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 0.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      Visible: true
+      id: 78445
+      type: RobotTrajectoryDisplay
+    - Frame: ""
+      Material:
+        Color:
+          B: 0.756349
+          G: 0.872224
+          R: 0.548413
+        Metallic: 0.200000
+        Normals: ""
+        Opacity: 1.000000
+        Roughness: 0.500000
+        Texture: ""
+        Unlit: false
+        id: 78472
+      Name: PlaneDisplay6
+      Size:
+        X: 100.000000
+        Y: 100.000000
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 0.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      Visible: true
+      id: 78471
+      type: PlaneDisplay
+    - DescriptionColor:
+        B: 1.000000
+        G: 1.000000
+        R: 1.000000
+      DescriptionOffset:
+        X: 0.000000
+        Y: 0.000000
+      DescriptionOpacity: 1.000000
+      DescriptionSize: 0.000000
+      Name: InteractiveMarkerDisplay5
+      ShowDescriptions: true
+      TopicNamespace: /interactive_markers
+      Visible: false
+      id: 81670
+      type: InteractiveMarkerDisplay
+    - CellCount: 10
+      CellSize: 2.000000
+      Color:
+        A: 1.000000
+        B: 0.628571
+        G: 0.587302
+        R: 0.606349
+      Frame: ""
+      LineWidth: 0.010000
+      MaterialOverride:
+        Color: false
+        Material:
+          Color:
+            B: 0.803175
+            G: 0.850794
+            R: 0.673016
+          Metallic: 0.098413
+          Normals: ""
+          Opacity: 1.000000
+          Roughness: 0.444444
+          Texture: ""
+          Unlit: false
+          id: 81703
+        Normals: false
+        Parameters: false
+        Texture: false
+        id: 81702
+      Name: GridDisplay1
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 0.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      Visible: true
+      id: 81701
+      type: GridDisplay
+    - Brightness: 4.095000
+      Color:
+        B: 0.000000
+        G: 0.000000
+        R: 0.708207
+      Frame: ""
+      Name: DirectionalLight2
+      ShadowBias: 1.000000
+      ShadowDepth: 10.000000
+      ShadowEnable: false
+      ShadowWidth: 5.000000
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 0.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      ViewSpace: true
+      Visible: true
+      id: 81935
+      type: DirectionalLight
+    - Brightness: 2.000000
+      Color:
+        B: 0.000000
+        G: 0.000000
+        R: 0.000000
+      Frame: ""
+      Name: AmbientLight3
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 0.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      ViewSpace: false
+      Visible: true
+      id: 81936
+      type: AmbientLight
+    - Brightness: 2.045000
+      Color:
+        B: 0.750000
+        G: 0.676230
+        R: 0.209016
+      Frame: ""
+      Name: DirectionalLight3
+      ShadowBias: 1.000000
+      ShadowDepth: 10.000000
+      ShadowEnable: false
+      ShadowWidth: 2.000000
+      Transform:
+        Orientation:
+          Pitch: -4.000000
+          Roll: 0.000000
+          Yaw: 158.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      ViewSpace: false
+      Visible: true
+      id: 81990
+      type: DirectionalLight
+    - FieldOfView: 90.000000
+      Frame: camera
+      ImageHeight: 1080
+      ImageWidth: 1920
+      MultiSampling: 4
+      Name: CameraDisplay1
+      Prefix: tamsviz_camera
+      QueueSize: 3
+      SampleShading: 1
+      Transform:
+        Orientation:
+          Pitch: 180.000000
+          Roll: 0.000000
+          Yaw: 180.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      ViewPosition:
+        X: 3.000000
+        Y: 3.000000
+        Z: 3.000000
+      ViewTarget:
+        X: 0.000000
+        Y: 0.000000
+        Z: 0.000000
+      Visible: true
+      id: 82016
+      type: CameraDisplay
+    - Frame: camera
+      Length: 0.355000
+      Material:
+        Color:
+          B: 1.000000
+          G: 1.000000
+          R: 1.000000
+        Metallic: 0.000000
+        Normals: ""
+        Opacity: 1.000000
+        Roughness: 0.400000
+        Texture: ""
+        Unlit: false
+        id: 82058
+      Name: AxesDisplay4
+      Radius: 0.035000
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 0.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      Visible: true
+      id: 82057
+      type: AxesDisplay
+    - Description: /robot_description
+      DoubleSided: false
+      Frame: ""
+      ImportOptions:
+        RecomputeNormals: false
+        SmoothNormals: false
+      MaterialOverride:
+        Color: true
+        Material:
+          Color:
+            B: 0.940000
+            G: 0.260000
+            R: 0.470000
+          Metallic: 0.000000
+          Normals: ""
+          Opacity: 1.000000
+          Roughness: 0.400000
+          Texture: ""
+          Unlit: false
+          id: 82086
+        Normals: false
+        Parameters: false
+        Texture: false
+        id: 82085
+      Name: RobotStateDisplay1
+      Topic: /humanoid_joint_states
+      Transform:
+        Orientation:
+          Pitch: 0.000000
+          Roll: 0.000000
+          Yaw: 0.000000
+        Position:
+          X: 0.000000
+          Y: 0.000000
+          Z: 0.000000
+      Visible: false
+      id: 82084
+      type: RobotStateDisplay
+  Environment:
+    AmbientLighting: 1.000000
+    BackgroundBrightness: 1.255000
+    BackgroundColor:
+      A: 0.552174
+      B: 1.000000
+      G: 1.000000
+      R: 1.000000
+    EnvironmentMap: ""
+    GroundColor:
+      B: 0.791926
+      G: 0.749690
+      R: 0.928571
+    HemisphericLighting: 0.828572
+    UseEnvironmentMap: false
+    id: 1357
+    type: EnvironmentComponent
+  FixedFrame: Pelvis
+  Name: Document
+  Rendering:
+    BlackLevel: 0.000000
+    Exposure: 1.000000
+    MultiSampling: 3
+    SampleShading: 1
+    ShadowCubeResolution: 520
+    ShadowMapResolution: 2052
+    ToneMapping: true
+    WhiteLevel: 1.000000
+    id: 1356
+    type: RenderingComponent
+  Republish: true
+  id: 1355
+Timeline:
+  Tracks:
+    []
+  id: 1354
+Window:
+  FieldOfView: 57.000000
+  Name: Window
+  ViewPosition:
+    X: -0.921892
+    Y: -5.177550
+    Z: 0.901209
+  ViewTarget:
+    X: -0.980499
+    Y: 1.538221
+    Z: 0.938719
+  id: 1358
+  type: SceneWindow
+id: 1353

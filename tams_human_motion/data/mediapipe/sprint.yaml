@@ -1,0 +1,33 @@
+# Configuration file for human motion reconstruction
+# 2022, Philipp Ruppel
+
+
+# Information about the .txt file with tracking data
+recording:
+
+  # Number of frames per second in .txt file
+  fps: 80
+
+  # Scaling
+  scale:
+    x: 1
+    y: 1
+    z: 1
+
+
+# Camera parameters
+camera:
+
+  # Camera orientation [radians]
+  orientation:
+    yaw: 0
+    pitch: 0
+    roll: 0.05
+  orientation_uncertainty: 0
+
+  # Camera position offset
+  position:
+    x: 0
+    y: 0
+    z: 0
+  height_uncertainty: 1

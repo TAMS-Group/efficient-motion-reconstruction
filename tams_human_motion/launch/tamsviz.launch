@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+  <node required="true" pkg="tamsviz" type="tamsviz" name="$(anon tamsviz)" output="screen" args="$(find tams_human_motion)/viz/tams_human_motion.tmv"/>
+</launch>

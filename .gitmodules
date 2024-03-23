@@ -1,0 +1,10 @@
+[submodule "tamsviz"]
+	path = tamsviz
+	url = https://github.com/TAMS-Group/tamsviz
+	branch = motion-reconstruction
+[submodule "tractor"]
+	path = tractor
+	url = https://github.com/TAMS-Group/tractor
+[submodule "ros-human-gazebo"]
+	path = ros-human-gazebo
+	url = https://github.com/TAMS-Group/ros-human-gazebo

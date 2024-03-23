@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <name>tams_human_motion</name>
+  <version>0.0.0</version>
+  <description>-</description>
+
+  <maintainer email="ruppel@informatik.uni-hamburg.de">Philipp Ruppel</maintainer>
+  <author email="ruppel@informatik.uni-hamburg.de">Philipp Ruppel</author>
+
+  <license>-</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>tractor</run_depend>
+  <run_depend>tamsviz</run_depend>
+
+  <export>
+  </export>
+
+</package>

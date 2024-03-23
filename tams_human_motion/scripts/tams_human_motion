@@ -1,0 +1,186 @@
+#!/usr/bin/env python
+
+# Human motion reconstruction
+# 2022, Philipp Ruppel
+
+import sys
+import tractor as tr
+import tractor.types_double as tt
+#import tractor.types_float as tt
+import numpy as np
+import time
+import scipy
+import scipy.signal
+from src.dataset import *
+from src.preprocessor import *
+from src.visualization import *
+from src.reconstruction import *
+from src.retargeting import *
+from src.regularization import *
+from src.dynamics import *
+from src.configuration import *
+from src.collision import *
+import matplotlib.pyplot as plt
+
+# Start ROS to publish visualization
+tr.init_ros("tams_human_motion")
+
+# Diagnostics
+#tr.debug()
+tr.logger.verbosity = 10
+tr.profiler.start()
+
+# Parse data and configuration
+datafile = False
+for arg in sys.argv[1:]:
+    if arg.endswith(".yaml"):
+        load_config(arg)
+    if arg.endswith(".txt"):
+        datafile = arg
+dataset = Dataset(path=datafile, time_step=1.0 / config["recording"]["fps"])
+
+# Load URDF model
+robot_model = tt.RobotModel()
+
+# Create collision model
+collision_robot = tt.CollisionRobot(robot_model)
+
+# Preprocess dataset
+dataset = Preprocessor().process(dataset, robot_model)
+
+# This object stores our motion reconstruction and is modified during the
+# optimization process
+reconstruction = Reconstruction(robot_model, dataset.frame_count, dataset.time_step)
+
+# Instantiate optimization terms
+dynamics = Dynamics(robot_model, dataset.frame_count, dataset.time_step)
+regularization = Regularization()
+collision = CollisionAvoidance(collision_robot)
+goals = [
+    Retargeting(dataset),
+    regularization,
+    dynamics,
+    collision,
+]
+
+# This function defines the optimization problem and will be passed to our
+# automatic differentiation framework
+def f():
+
+    # Create free variables...
+    for time_frame in range(dataset.frame_count):
+
+        # for reconstructed poses
+        reconstruction.make_variables(time_frame)
+
+        # and forces / torques / slack variables
+        for goal in goals:
+            goal.make_variables(time_frame)
+
+    # Map from joint positions to Cartesian positions
+    reconstruction.compute_kinematics()
+
+    # Apply loss terms and dynamics
+    for goal in goals:
+        goal.apply(reconstruction)
+
+# Record optimization problem
+print("recording problem definition")
+program = tr.record(f)
+
+# Build gradient programs
+print("building derivatives")
+derivatives = tr.derive(program)
+
+# Create a solver to solve our optimization problem
+print("compiling optimizer")
+
+if 0:
+    solver = tt.GradientDescentSolver(tr.DefaultEngine())
+    solver.compile(program)
+    solver.learning_rate = 0.001
+    solver.momentum = 0
+    solver.max_iterations = 100
+    solver.tolerance = 0;
+
+if 0:
+    solver = tt.AdamSolver(tr.DefaultEngine())
+    solver.compile(program)
+    solver.max_iterations = 30
+    solver.tolerance = 1e-9
+    solver.learning_rate = 0.0001
+
+if 0:
+    solver = tt.LeastSquaresSolver(tr.DefaultEngine())
+    solver.compile(program)
+    solver.max_iterations = 1
+    solver.step_scaling = 0.8
+    solver.max_linear_iterations = 200;
+
+if 1:
+    solver = tt.SparseLeastSquaresSolver(tr.DefaultEngine())
+    solver.compile(program)
+    solver.max_iterations = 1
+    solver.regularization = 1e-9
+    solver.test_gradients = False
+    solver.step_scaling = 0.5
+
+    if 0:
+        solver.linear_solver = tt.SparseLinearGS()
+        solver.linear_solver.max_iterations = 50
+        solver.linear_solver.sor = 1.5
+        solver.linear_solver.tolerance = 1e-6
+
+    if 1:
+        solver.linear_solver = tt.SparseLinearLU()
+
+    if 0:
+        solver.linear_solver = tt.SparseLinearQR()
+
+    if 0:
+        solver.linear_solver = tt.SparseLinearCG()
+        solver.linear_solver.max_iterations = 30
+        solver.linear_solver.tolerance = 1e-6
+
+    if 0:
+        solver.linear_solver = tt.SparseLinearBiCGSTAB()
+        solver.linear_solver.max_iterations = 30
+        solver.linear_solver.tolerance = 1e-6
+
+# Run optimization according to parameters defined in the config files
+start_time = time.time()
+schedule = config["solver"]["schedule"]
+for istep in range(len(schedule)):
+
+    # Set parameters
+    sched = schedule[istep]
+    if hasattr(solver, "regularization"): solver.regularization = sched[1]
+    regularization.weight_parameter.value = sched[2]
+    dynamics.weight_parameter.value = sched[3]
+    collision.weight_parameter.value = sched[4]
+
+    # Run for a few iterations (as defined in config file)
+    for iit in range(sched[0]):
+
+        # Print progress
+        print("schedule", istep + 1, "/", len(schedule))
+        print("iteration", iit + 1, "/", sched[0])
+        if hasattr(solver, "regularization"): print("diagonal regularization weight", solver.regularization)
+        print("dynamic regularization weight", regularization.weight_parameter.value)
+        print("physical consistency weight", dynamics.weight_parameter.value)
+        print("frame count", dataset.frame_count)
+        print("solving")
+
+        # Invoke solver
+        t0 = time.time()
+        solver.solve()
+        print(time.time() - t0)
+
+        # Visualize using TAMSVIZ
+        print("visualizing")
+        visualize_data(dataset.data)
+        reconstruction.compute_kinematics()
+        for goal in goals:
+            goal.visualize(reconstruction)
+        tr.visualize("/move_group/display_planned_path", reconstruction.joint_trajectory, dataset.time_step)
+print("runtime", time.time() - start_time, "s")

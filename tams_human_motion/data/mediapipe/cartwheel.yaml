@@ -1,0 +1,14 @@
+# Configuration file for human motion reconstruction
+# 2022, Philipp Ruppel
+
+# Information about the .txt file with tracking data
+recording:
+
+  # Number of frames per second in .txt file
+  fps: 50
+
+  # Scaling
+  scale:
+    x: 1
+    y: 1
+    z: 1
