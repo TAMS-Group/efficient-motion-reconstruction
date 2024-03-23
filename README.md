@@ -31,8 +31,12 @@ e.g. ```rosrun tams_human_motion tams_human_motion `rospack find tams_human_moti
 - Remember to set the frame rate from the original video
 - While the optimization is running, you can watch the progress via TAMSVIZ. In TAMSVIZ, you can select different views from the Display Tree, or by clicking on them in the 3D viewport, and configure them under Properties, e.g. to show or hide force vectors, play/stop the trajectory, show the entire trajectory, etc.
 
+## Run on your own video
+Our method accommodates custom keypoint layouts, allowing you to effortlessly define the objective function within the configuration file. To extract keypoint positions from a monocular video, you can etheir:
+- Utilize [Mediapipe](https://developers.google.com/mediapipe) for an efficient solution that doesn't require a GPU.
+- Install [Metrabs](https://github.com/isarandi/metrabs) if you have access to a GPU machine for enhanced estimation accuracy.
+To properly format the keypoint data into a text file, please adhere to the guidelines provided [here](https://github.com/TAMS-Group/efficient-motion-reconstruction/blob/master/tams_human_motion/data/readme.txt). By following these instructions, you'll ensure that your data is compatible with our motion reconstruction framework.
 
- 
 ## Citing
 If you find our work useful, please consider citing:
 ```BibTeX

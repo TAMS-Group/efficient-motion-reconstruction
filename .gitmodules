@@ -8,3 +8,6 @@
 [submodule "ros-human-gazebo"]
 	path = ros-human-gazebo
 	url = https://github.com/TAMS-Group/ros-human-gazebo
+[submodule "metrabs"]
+	path = metrabs
+	url = https://github.com/isarandi/metrabs
