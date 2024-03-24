@@ -1,6 +1,6 @@
 # Efficient Human Motion Reconstruction from Monocular Videos with Physical Consistency Loss
 
-This is the code for Efficient Human Motion Reconstruction from Monocular Videos with Physical Consistency Loss
+This is the code for our Siggraph Asia paper [Efficient Human Motion Reconstruction from Monocular Videos with Physical Consistency Loss](https://dl.acm.org/doi/10.1145/3610548.3618169)
 
  * [Project Page](https://hitlyn.github.io/EHMR/)
  * [Paper](https://dl.acm.org/doi/10.1145/3610548.3618169)
